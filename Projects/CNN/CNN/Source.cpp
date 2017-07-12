@@ -73,9 +73,9 @@ public:
 		for (int i = 0; i < 5; i++) {
 			outk[i].setZero(24, 24);
 		}
-		outb.setZero(1, 720);
-		outf1.setZero(1, 100);
-		outf2.setZero(1, 10);
+		outb.setZero(720, 1);
+		outf1.setZero(100, 1);
+		outf2.setZero(10, 1);
 	}
 	void inputImage() {
 		input.setOnes();
@@ -85,15 +85,17 @@ public:
 		for (int n = 0; n < 5; n++) {
 			for (int i = 0; i < 24; i++) {
 				for (int j = 0; j < 24; j++) {
-					outk[n](i, j) = kernelB(1, n);
+					outk[n](i, j) = kernelB(0, n);
 					for (int s = 0; s < 5; s++) {
 						for (int t = 0; t < 5; t++) {
 							outk[n](i, j) += input(i + s, j + t)*kernel[n](s, t);
 						}
 					}
+					
 				}
 			}
 		}
+
 		/* conv */
 
 		/* pooling */
@@ -113,20 +115,25 @@ public:
 				}
 			}
 		}
+
 		/* pooling */
 
 		/* fullconnect1 */
-		outf1 = outb*fcLayer1;
+		outf1 = fcLayer1*outb;
 		outf1 -= fcLayer1B;
 		/* fullconnect1 */
 
 		/* fullconnect2 */
-		outf2 = outf1*fcLayer2;
+		outf2 = fcLayer2*outf1;
 		outf2 -= fcLayer2B;
 		/* fullconnect2 */
+
 	}
 	void backProp() {
 
+	}
+	void show() {
+		cout << kernel[0] << endl;
 	}
 
 };
@@ -134,7 +141,9 @@ public:
 
 int main() {
 
-
+	CNN test;
+	test.inputImage();
+	
 
 	return 0;
 }
